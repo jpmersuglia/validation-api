@@ -4,6 +4,7 @@ Joi as a third party validation (yes, I haven't writed my own validation)
 And least but not last JWT for login credential.
 
 #Update
-Gonna upload the finished part when my Atlas isn't triking me over connection timeout for proper testing of the app. Or gonna use MongoDB Community Edition for testing purposes.
+Done, updated the JWT token creation and implementation. Gonna re-upload a next version to revoke token auth on click or on destroyed.
+Possibly gonna use this api server on another proyect as a backend api.
 
-#December 1, 2020. JPM.
+#December 1, 2020.
