@@ -11,6 +11,15 @@ const registerValidation = (data) => {
     return schema.validate(data)
 }
 
+//Post Validation
+const postValidation = (data) => {
+    const schema = Joi.object({
+        title: Joi.string().min(3).max(35).required(),
+        description: Joi.string().min(6).max(1024).required()
+    });
+    return schema.validate(data)
+}
+
 //Login Validation
 const loginValidation = (data) => {
     const schema = Joi.object({
@@ -21,4 +30,5 @@ const loginValidation = (data) => {
 }
 
 module.exports.registerValidation = registerValidation;
+module.exports.postValidation = postValidation;
 module.exports.loginValidation = loginValidation;

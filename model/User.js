@@ -1,4 +1,9 @@
+// const { date } = require('joi');
 const mongoose = require('mongoose');
+
+// var dateFormat = require('dateformat');
+// var now = new Date();
+// const currentDate = dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,6 +22,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         max: 1024,
         min: 6
+    },
+    date: {
+        type: Date,
+        default: Date.now()
     }
 });
 
