@@ -8,7 +8,7 @@ const User = require('../model/User');
 //Date Formater
 var dateFormat = require('dateformat');
 var now = new Date();
-const currentDate = dateFormat(now, "dddd, mmmm dS of yyyy. h:MM:ss TT");
+const currentDate = dateFormat(now, "dddd, mmmm dS, yyyy. h:MM:ss TT");
 
 //Get Posts Method
 router.get('/', verify, async(req, res) =>{
@@ -35,7 +35,12 @@ router.post('/', verify, async(req, res) =>{
         title: req.body.title,
         description: req.body.description
     });
-
+    const {error} = postValidation(req.body);
+    if(error) return res.status(502)
+    .json({
+        msgError: true,
+        msgBody: error.details[0].message
+    })
     try{
         const savedPost = await post.save();
         res.status(200)
@@ -49,17 +54,16 @@ router.post('/', verify, async(req, res) =>{
             'CreatedAt': currentDate
         });
     }catch(err){
-        const {error} = postValidation(req.body);
         res.status(500)
         .json({
             msgError: true,
-            msgBody: error.details[0].message
+            msgBody: err
         })
     }
 });
 
 //Get Specific post
-router.get('/:id', async(req,res) => {
+router.get('/:id', verify, async(req,res) => {
     try{
         const post = await Post.findById(req.params.id);
         res.status(200)
@@ -68,7 +72,8 @@ router.get('/:id', async(req,res) => {
             data: post
         })
     }catch(err){
-        res.status(500)
+        const {error} = registerValidation(req.body);
+        if (error) return res.status(500)
         .json({
             msgError: true,
             msgBody: 'There\'s no such post with that ID'
@@ -77,10 +82,13 @@ router.get('/:id', async(req,res) => {
 });
 
 //Delete single post
-router.delete('/:id', async(req,res) => {
+router.delete('/:id', verify, async(req,res) => {
     try{
         const deletePost = await Post.deleteOne({_id: req.params.id });
-        console.log(deletePost)
+        console.log({'A post has been deleted': {
+            'ID': req.params.id,
+            'Post deleted': deletePost
+        }})
         res.status(202)
         .json({
             msgError: false,
@@ -96,10 +104,16 @@ router.delete('/:id', async(req,res) => {
 });
 
 //Update a post
-router.patch('/:id', async(req,res) => {
+router.patch('/:id', verify, async(req,res) => {
+    const {error} = postValidation(req.body);
+    if(error) return res.status(500)
+    .json({
+        msgError: true,
+        msgBody: error.details[0].message
+    })
+
     try{
         const updatePost = await Post.updateOne({ _id: req.params.id },
-        console.log(updatePost),
             { $set: 
                 {
                     title: req.body.title,
@@ -110,18 +124,18 @@ router.patch('/:id', async(req,res) => {
         res.status(202)
         .json({
             msgError: false,
+            updated: updatePost.ok,
             data: { 
                 title: req.body.title,
                 description: req.body.description,
-                updated: updatePost.ok
             }
+            
         })
     }catch(err){
-        const {error} = postValidation(req.body);
         res.status(500)
         .json({
             msgError: true,
-            msgBody: error
+            msgBody: error.details[0].message
         })
     }
 });
