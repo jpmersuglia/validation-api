@@ -43,7 +43,7 @@ router.get('/', async(req,res) => {
 router.post('/', async(req,res) => {
     const team = new Team({
         name: req.body.name,
-        owner: req.header.name
+        owner: req.body.owner
     });
     const {error} = teamValidation(req.body);
     if(error) return res.status(502)

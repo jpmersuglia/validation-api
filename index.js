@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 //Routes
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/posts');
+const teamRoute = require('./routes/teams');
+const blockerRoute = require('./routes/blockers');
+
 
 dotenv.config();
 
@@ -26,6 +29,8 @@ app.use(express.json());
 //Routes Middlewares
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
+app.use('/api/teams', teamRoute);
+app.use('/api/blockers', blockerRoute);
 
 
 app.listen(3000, () => {

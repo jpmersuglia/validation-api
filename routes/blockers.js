@@ -31,7 +31,7 @@ router.post('/', async(req,res) => {
     if(error) return res.status(502)
     .json({
         msgError: true,
-        msgBody: error.detaild[0].message
+        msgBody: error.details[0].message
     })
     try{
         const savedBlocker = await blocker.save();
